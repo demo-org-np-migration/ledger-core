@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="serviceName" source="spring.application.name" defaultValue="ledger-core"/>
+    <springProperty scope="context" name="env" source="ENV" defaultValue="local"/>
+
+    <!-- las convenciones internas de API: JSON a stdout, un objeto por línea, campos level/msg/service/env. -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"service":"${serviceName}","env":"${env}"}</customFields>
+            <fieldNames>
+                <message>msg</message>
+                <thread>[ignore]</thread>
+                <version>[ignore]</version>
+            </fieldNames>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
