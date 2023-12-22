@@ -19,12 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
  * Authorization follows the pattern the org uses across services: any valid
  * token gets in, but the ledger-writing surface and the KYC status transition
  * are restricted to service-to-service tokens (role "service").
- *
- * Note (supuesto): las convenciones internas de API's per-endpoint table lists
- * "GET /v1/ledger/entries?account_id=" as JWT (any token), but the coarser
- * rule we were given for this repo is "/v1/ledger/** requires role service".
- * We follow the coarser /v1/ledger/** rule for the whole controller,
- * including that GET, and call it out here and in the README.
  */
 @Configuration
 @EnableWebSecurity
@@ -39,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/actuator/prometheus").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/v1/customers/*/kyc-status").hasRole("service")
+                        .requestMatchers(HttpMethod.GET, "/v1/ledger/entries").authenticated()
                         .requestMatchers("/v1/ledger/**").hasRole("service")
                         .requestMatchers("/v1/legacy-batch/**").hasRole("service")
                         .anyRequest().authenticated())

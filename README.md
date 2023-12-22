@@ -36,15 +36,10 @@ Micrometer), Flyway para migraciones, PostgreSQL. Build con Gradle (Kotlin DSL),
 
 Los tokens son JWT de Keycloak (`KEYCLOAK_ISSUER`). El claim `realm_access.roles` se mapea a
 authorities `ROLE_<rol>` (ver `config/KeycloakRealmRoleConverter`). Cualquier token válido entra;
-`/v1/ledger/**`, `PATCH /v1/customers/{id}/kyc-status` y `/v1/legacy-batch/**` piden además el rol
-`service`. `/actuator/health` y `/actuator/prometheus` son públicos.
-
-**Supuesto:** la tabla de endpoints del contrato maestro (`las convenciones internas de API` §6) marca
-`GET /v1/ledger/entries?account_id=` como "JWT" (cualquier token), pero la regla que nos dieron para
-este repo es más simple — todo `/v1/ledger/**` pide rol `service` — y eso es lo que implementamos,
-incluyendo ese GET. Si en algún momento un cliente que no es un servicio necesita leer movimientos
-directamente (en vez de vía `accounts-api` `/statement`), hay que sacar esa ruta del bloque
-`/v1/ledger/**` en `SecurityConfig`.
+`POST /v1/ledger/entries`, `POST /v1/ledger/transfers`, `PATCH /v1/customers/{id}/kyc-status` y
+`/v1/legacy-batch/**` piden además el rol `service`. `GET /v1/ledger/entries?account_id=` acepta
+cualquier token válido, igual que el resto de las lecturas. `/actuator/health` y
+`/actuator/prometheus` son públicos.
 
 ## Reglas de negocio no obvias
 
