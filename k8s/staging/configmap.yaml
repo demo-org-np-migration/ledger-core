@@ -16,3 +16,4 @@ data:
   DB_PORT: "5432"
   DB_NAME: "ledger"
   KEYCLOAK_ISSUER: "http://keycloak.platform.svc:8080/realms/cauri-staging"
+  NP_TEST_W: "w1"
